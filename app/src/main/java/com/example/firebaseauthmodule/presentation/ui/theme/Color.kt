@@ -1,4 +1,4 @@
-package com.example.firebaseauthmodule.ui.theme
+package com.example.firebaseauthmodule.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
