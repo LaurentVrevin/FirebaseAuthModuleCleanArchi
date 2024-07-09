@@ -16,7 +16,6 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -53,9 +52,9 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -64,12 +63,17 @@ dependencies {
     implementation(libs.androidx.material3)
 
     implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
 
-    //Hilt
+    //For Image
+    implementation (libs.coil.kt.coil.compose)
+
+    // Hilt
     implementation(libs.google.dagger.hilt)
     implementation(libs.firebase.auth)
     implementation(libs.play.services.auth)
     implementation(libs.googleid)
+    implementation(libs.volley)
     kapt(libs.google.dagger.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
