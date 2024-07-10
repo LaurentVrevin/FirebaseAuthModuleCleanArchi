@@ -5,7 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.firebaseauthmodule.domain.model.User
 import com.example.firebaseauthmodule.domain.repository.AuthRepository
+import com.example.firebaseauthmodule.util.SignInException
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -51,14 +54,17 @@ class LoginViewModel @Inject constructor(
                     _user.value = user
                     onSignInSuccess(user)
                 },
-                onFailure = { e -> onSignInError(e) }
+                onFailure = { e ->
+                    val errorMessage = when (e) {
+                        is java.net.UnknownHostException -> "Problème de réseau, veuillez réessayer."
+                        is ApiException -> "Échec de la connexion avec Google."
+                        is FirebaseAuthException -> "Échec de l'authentification Firebase."
+                        else -> "Une erreur inconnue est survenue."
+                    }
+                    onSignInError(SignInException(errorMessage))
+                }
             )
         }
     }
 
-
-
-    private fun onSignInError(e: Throwable) {
-        TODO("Not yet implemented")
-    }
 }

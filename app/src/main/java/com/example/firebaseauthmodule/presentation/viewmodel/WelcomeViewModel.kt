@@ -15,26 +15,25 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WelcomeViewModel @Inject constructor(
-    private val signOutUseCase: SignOutUseCase // Inject the SignOutUseCase
+    private val signOutUseCase: SignOutUseCase
 ) : ViewModel() {
 
-    private val _user = MutableStateFlow<User?>(null) // Private mutable state for user
-    val user: StateFlow<User?> = _user // Public read-only state for user
+    private val _user = MutableStateFlow<User?>(null)
+    val user: StateFlow<User?> = _user
 
-    // Set the current user
     fun setUser(user: User?) {
         _user.value = user
     }
 
-    // Sign out the user
-    fun signOut(onSignOut: () -> Unit) {
+    fun signOut(onSignOut: () -> Unit, onError: (Exception) -> Unit) {
         viewModelScope.launch {
-            val result = signOutUseCase() // Call the SignOutUseCase
+            val result = signOutUseCase()
             if (result.isSuccess) {
-                _user.value = null // Clear the user state
-                onSignOut() // Execute the sign-out callback
+                _user.value = null
+                onSignOut()
             } else {
-                // Handle error if needed
+                val exception = result.exceptionOrNull() ?: Exception("Unknown error")
+                onError(exception as Exception)
             }
         }
     }

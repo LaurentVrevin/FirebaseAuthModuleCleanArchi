@@ -1,6 +1,7 @@
 package com.example.firebaseauthmodule.presentation.screens
 
 
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -44,11 +45,12 @@ fun LoginScreen(
             val account = task.getResult(ApiException::class.java)!!
             loginViewModel.signInWithGoogle(account.idToken!!,
                 onSignInSuccess = { user ->
-                    sharedViewModel.setUser(user) // Update shared view model with signed-in user
-                    navController.navigate("welcome") // Navigate to welcome screen
+                    sharedViewModel.setUser(user)
+                    navController.navigate("welcome")
                 },
                 onSignInError = { e ->
-                    // Handle exception
+                    // Afficher un message d'erreur à l'utilisateur
+                    Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
                 })
         } catch (e: ApiException) {
             // Handle exception
@@ -69,14 +71,14 @@ fun LoginScreen(
     ) {
         Text(
             text = if (user == null) {
-                "Merci de vous connecter" // Prompt user to sign in
+                "Merci de vous connecter"
             } else {
-                "Vous êtes connecté en tant que ${user.email}" // Show signed-in user email
+                "Vous êtes connecté en tant que ${user.email}"
             }
         )
         Button(onClick = {
             val signInIntent = googleSignInClient.signInIntent
-            signInLauncher.launch(signInIntent) // Launch Google sign-in intent
+            signInLauncher.launch(signInIntent)
         }) {
             Text(text = "Sign in with Google")
         }
