@@ -15,9 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
-import com.example.firebaseauthmodule.presentation.viewmodel.LoginViewModel
 import com.example.firebaseauthmodule.presentation.viewmodel.SharedViewModel
 import com.example.firebaseauthmodule.presentation.viewmodel.WelcomeViewModel
 
@@ -50,12 +48,18 @@ fun WelcomeScreen(
         }
         Spacer(modifier = Modifier.size(16.dp))
         Button(onClick = {
-            welcomeViewModel.signOut {
-                sharedViewModel.clearUser()
-                navController.navigate("login") {
-                    popUpTo("login") { inclusive = true }
+            welcomeViewModel.signOut(
+                onSignOut = {
+                    sharedViewModel.clearUser()
+                    navController.navigate("login") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                },
+                onError = { exception ->
+
+                    println("Error during sign out: ${exception.message}")
                 }
-            }
+            )
         }) {
             Text(text = "Se déconnecter")
         }
